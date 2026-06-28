@@ -32,9 +32,9 @@ app.use(cors());
 app.use(express.json());
 app.use("/admin", express.static(adminDir));
 
-app.get("/", (_request, response) => {
-  response.redirect("/admin/");
-});
+// app.get("/", (_request, response) => {
+//   response.redirect("/admin/");
+// });
 
 app.get("/api/health", async (_request, response) => {
   const materials = await readMaterials();
@@ -88,9 +88,10 @@ app.post("/api/materials/upload", upload.single("file"), async (request, respons
       material
     });
   } catch (error) {
-    const statusCode = error.statusCode || 500;
-    response.status(statusCode).json({
-      message: error.message || "Upload failed."
+    const uploadError = normalizeUploadError(error);
+    logUploadError(uploadError.originalError);
+    response.status(uploadError.statusCode).json({
+      message: uploadError.message
     });
   }
 });
@@ -166,6 +167,33 @@ function uploadToCloudinary(file, type) {
     );
 
     stream.end(file.buffer);
+  });
+}
+
+function normalizeUploadError(error) {
+  const statusCode = Number(error?.http_code || error?.statusCode || 500);
+
+  if (statusCode === 403 && error?.name === "UnexpectedResponse") {
+    return {
+      statusCode,
+      message:
+        "Cloudinary rejected the upload with a 403. Verify CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET, then confirm the Cloudinary account is a Programmable Media environment and that the plan allows this file type and size.",
+      originalError: error
+    };
+  }
+
+  return {
+    statusCode,
+    message: error?.message || "Upload failed.",
+    originalError: error
+  };
+}
+
+function logUploadError(error) {
+  console.error("Material upload failed.", {
+    name: error?.name,
+    message: error?.message,
+    httpCode: error?.http_code || error?.statusCode
   });
 }
 
