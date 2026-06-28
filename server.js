@@ -13,7 +13,7 @@ const app = express();
 const port = Number(process.env.PORT || 4000);
 const dataDir = path.join(__dirname, "data");
 const dataFile = path.join(dataDir, "materials.json");
-const adminDir = path.join(__dirname, "..", "admin");
+const adminDir = path.join(__dirname, "admin");
 
 const upload = multer({
   storage: multer.memoryStorage(),

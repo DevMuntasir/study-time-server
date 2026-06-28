@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Time Admin</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <p class="eyebrow">Study Time Admin</p>
+        <h1>Upload and organize study materials for the app.</h1>
+        <p class="hero-copy">
+          PDF, image, ar video upload kore backend API diye Android app e instantly
+          show korun.
+        </p>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="panel summary-panel">
+          <div>
+            <p class="label">Total Materials</p>
+            <strong id="totalCount">0</strong>
+          </div>
+          <div>
+            <p class="label">PDF</p>
+            <strong id="pdfCount">0</strong>
+          </div>
+          <div>
+            <p class="label">Images</p>
+            <strong id="imageCount">0</strong>
+          </div>
+          <div>
+            <p class="label">Videos</p>
+            <strong id="videoCount">0</strong>
+          </div>
+        </article>
+
+        <section class="panel form-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">New Upload</p>
+              <h2>Add material</h2>
+            </div>
+            <p id="statusMessage" class="status idle">Ready</p>
+          </div>
+
+          <form id="uploadForm" class="upload-form">
+            <label>
+              <span>Title</span>
+              <input type="text" name="title" placeholder="Chemistry short note" />
+            </label>
+
+            <label>
+              <span>Category</span>
+              <input type="text" name="category" placeholder="Chemistry" />
+            </label>
+
+            <label>
+              <span>Description</span>
+              <textarea
+                name="description"
+                rows="4"
+                placeholder="Short overview or chapter note"
+              ></textarea>
+            </label>
+
+            <label>
+              <span>File</span>
+              <input
+                type="file"
+                name="file"
+                accept=".pdf,image/*,video/*"
+                required
+              />
+            </label>
+
+            <button type="submit">Upload to Cloudinary</button>
+          </form>
+        </section>
+      </section>
+
+      <section class="panel list-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Library</p>
+            <h2>Published materials</h2>
+          </div>
+          <button id="refreshButton" class="ghost-button" type="button">Refresh</button>
+        </div>
+
+        <div id="materialsList" class="materials-list"></div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
